@@ -10,13 +10,13 @@ sys.path.append(os.path.join(sys.path[0][:-6]))
 
 from database import Base
 
-class Table_Users(Base):
-    __tablename__ = "users"
+class Table_products(Base):
+    __tablename__ = "products"
     
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[str]
-    photo: Mapped[str]
+    photo: Mapped[str | None]
     date_published: Mapped[datetime.datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     prise: Mapped[float]
     contacts: Mapped[str]
