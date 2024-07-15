@@ -13,9 +13,22 @@ from config import POSTGRES_HOST, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_USE
 celery = Celery('tasks', broker=f"redis://127.0.0.1:{REDIS_PORT}")
 
 
-session = boto3.session.Session(aws_access_key_id=KEY_YANDEX_CLOUD, aws_secret_access_key=IDENT_YANDEX_CLOUD)
-s3 = session.client(service_name='s3', endpoint_url='https://storage.yandexcloud.net')
+session = boto3.session.Session(aws_access_key_id=IDENT_YANDEX_CLOUD, aws_secret_access_key=KEY_YANDEX_CLOUD, aws_session_token=None, region_name=None)
+s3 = session.client(
+    service_name='s3',
+    endpoint_url='https://storage.yandexcloud.net'
+)
 config = TransferConfig(use_threads=False)
+
+def test_s3():
+    #s3.put_object(Bucket='for9may', Key='Testttttt', Body=("егор лох"))
+    
+    
+    
+    return 0 
+
+test_s3()
+
 
 
 class Base(DeclarativeBase):
