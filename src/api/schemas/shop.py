@@ -8,7 +8,7 @@ class post_new_item(BaseModel):
     short_description: str
     prise: float 
     contacts: str
-    photo: UploadFile =  File(...)
+    photos: list[UploadFile] = File(...)
     
 class delete_item(BaseModel): 
     token: str 

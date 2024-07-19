@@ -11,6 +11,7 @@ from fastapi_cache.decorator import cache
 
 from database import get_async_session
 from api.shop import router as router_shop
+from api.update import router as router_update
 from config import REDIS_PORT
 
 
@@ -34,7 +35,10 @@ async def startup_event():
 
 
 app.include_router(
-    router=router_shop,
-    prefix="/shop",
-    tags=["Shop"]
+    router=router_shop
 )
+
+app.include_router(
+    router=router_update
+)
+

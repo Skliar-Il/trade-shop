@@ -2,9 +2,12 @@ from fastapi.responses import JSONResponse
 from fastapi import status
 
 
-async def status_ok(detail):
+async def status_ok(detail: str | None = None):
     
-    return JSONResponse(status_code=status.HTTP_200_OK, content={"detail": detail})
+    if detail:
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"detail": detail})
+    
+    return JSONResponse(status_code=status.HTTP_200_OK)
 
 
 async def status_error_401(detail):
