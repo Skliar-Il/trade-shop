@@ -19,10 +19,8 @@ async def push_photos(photos, id):
     return 0
 
 @celery.task
-async def push_photo(photos, id):
-    
-    for i in range(len(photos)):
-        s3.put_object(Bucket=BUCKET, Key=f"{id}_{i+1}_photo.jpg", Body=photos[i].file)
+async def push_photo(photo, id, ident_id):
+    s3.put_object(Bucket=BUCKET, Key=f"{id}_{ident_id}_photo.jpg", Body=photo.file)
     
     return 0
 

@@ -8,5 +8,5 @@ class put_update_item(BaseModel):
     full_description: str
     price: float
     contacts: str
-    last_photos: str | None = None
+    last_photos: list[str]
     new_photos: list[UploadFile] | None = None
