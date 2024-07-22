@@ -6,10 +6,10 @@ WORKDIR /app
 
 COPY req.txt .
 
-RUN pip inrtall -r req.txt
+RUN pip install -r req.txt
 
 COPY . .
 
 WORKDIR src 
 
-CMD guvicorn
+CMD gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
