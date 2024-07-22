@@ -10,6 +10,7 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
 
 REDIS_PORT = os.environ.get("REDIS_PORT")
+REDIS_HOST = os.environ.get("REDIS_HOST")
 
 TG_BOT_TOKEN = os.environ.get("TG_BOT_TOKEN")
 

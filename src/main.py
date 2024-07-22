@@ -12,7 +12,8 @@ from fastapi_cache.decorator import cache
 from database import get_async_session
 from api.shop import router as router_shop
 from api.update import router as router_update
-from config import REDIS_PORT
+from api.login import router as router_login
+from config import REDIS_PORT, REDIS_HOST
 
 
 
@@ -28,7 +29,7 @@ async def title():
 
 @app.on_event("startup")
 async def startup_event():
-    redis_cache = asyncredis.from_url(f"redis://127.0.0.1:{REDIS_PORT}", encoding = "utf8", decode_responses = True)
+    redis_cache = asyncredis.from_url(f"redis://{REDIS_HOST}:{REDIS_PORT}", encoding = "utf8", decode_responses = True)
     FastAPICache.init(RedisBackend(redis_cache), prefix="fastapi-cache")
 
 
@@ -40,5 +41,9 @@ app.include_router(
 
 app.include_router(
     router=router_update
+)
+
+app.include_router(
+    router=router_login
 )
 

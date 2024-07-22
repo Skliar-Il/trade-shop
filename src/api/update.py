@@ -9,7 +9,7 @@ sys.path.append(os.path.join(sys.path[0][:-3]))
 from database import get_async_session
 from api.schemas.update import put_update_item
 from api.login import get_token
-from api.responses import status_error_401, status_ok
+from api.responses import *
 from models.products import *
 from models.photo import *
 from api.tasks.update import *
@@ -27,8 +27,8 @@ async def v1():
 
 @router.put("/shop/item/{id}")
 async def update_item(id: int, request: put_update_item, session: AsyncSession = Depends(get_async_session)):
-    # if request.token != await get_token():
-    #     return await status_error_401("invalid token")
+    if request.token != await get_token():
+         return await status_error_401("invalid token")
     
     await session.execute(update(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
                                                          Table_products.full_description: request.full_description,

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, UploadFile, File
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, insert, func, update
+from sqlalchemy import select, insert, func, update, delete
 from typing import List
 from fastapi_cache.decorator import cache
 from io import BytesIO
@@ -14,8 +14,8 @@ sys.path.append(os.path.join(sys.path[0][:-3]))
 from database import get_async_session, s3
 from models.products import Table_products
 from models.photo import Table_photos
-from api.schemas.shop import post_new_item
-from api.responses import status_ok, status_error_401
+from api.schemas.shop import *
+from api.responses import *
 from api.login import get_token
 from api.tasks.shop import push_photos
 
@@ -66,6 +66,24 @@ async def new_item(request: post_new_item, session: AsyncSession = Depends(get_a
     await push_photos(request.photos, last_id)
     
     return await status_ok()
+
+
+
+@router.delete("/delete_item/{id}")
+async def delete_item(id: int, request: delete_item, session: AsyncSession = Depends(get_async_session)):
+    if request.token != await get_token():
+        return await status_error_401("invalid token")
+    
+    await session.execute(delete(Table_products).where(Table_products.id == id))
+    await session.commit()
+    
+    return await status_ok("ok")
+    
+    
+    
+    
+    
+         
 
 
 
