@@ -7,7 +7,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from redis import asyncio as asyncredis
 from fastapi_cache import FastAPICache
 from fastapi_cache.decorator import cache
-
+from fastapi.middleware.cors import CORSMiddleware
 
 from database import get_async_session
 from api.shop import router as router_shop
@@ -21,6 +21,19 @@ app = FastAPI(
     title="trade_shop",
     openapi_prefix="/v1",
 )
+
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 
 @app.get("/")
 async def title():
