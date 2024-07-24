@@ -52,8 +52,13 @@ async def get_item(id: int, session: AsyncSession = Depends(get_async_session)):
                                         .filter(Table_products.id == Table_photos.product_id)
                                  .where(Table_products.id == id)
                                  )
+    data = data.mappings().all()
     
-    return {"status": "ok", "detail": data.mappings().all()}
+    if data == []:
+        return await status_error_404()
+    
+    
+    return {"status": "ok", "detail": data}
 
 
 
