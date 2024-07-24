@@ -46,7 +46,8 @@ async def items(session: AsyncSession = Depends(get_async_session)):
 
 @router.get("/item/{id}")
 async def get_item(id: int, session: AsyncSession = Depends(get_async_session)):
-    data = await session.execute(select(Table_products.id, Table_products.name, Table_products.short_description,
+    data = await session.execute(select(Table_products.id, Table_products.name, Table_products.short_description, 
+                                        Table_products.full_description,
                                         Table_products.date_published, Table_products.date_published,Table_products.price,
                                         Table_products.contacts, Table_photos.photo_link)
                                         .filter(Table_products.id == Table_photos.product_id)
