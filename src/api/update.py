@@ -31,8 +31,8 @@ async def update_item(id: int,
                       new_photos: list[UploadFile] = None, 
                       session: AsyncSession = Depends(get_async_session)):
     
-    # if request.token != await get_token():
-    #      return await status_error_401("invalid token")
+    if request.token != await get_token():
+         return await status_error_401("invalid token")
     
     
     await session.execute(update(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
@@ -47,12 +47,15 @@ async def update_item(id: int,
         
         for i in range(len(new_photos)):
             while True:
-                if f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_photo.jpg" in request.last_photos:
+                origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_photo.jpg"
+                
+                if origin in request.last_photos:
                     counter+=1
-                    print(0)
+                    
 
                 else:
                     await push_photo(new_photos[i], id, counter)
+                    await session.execute(insert(Table_photos).values({Table_photos.product_id: id, Table_photos.photo_link: origin}))
                     counter+=1
                     break
     
