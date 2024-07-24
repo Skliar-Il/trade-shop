@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, status, UploadFile, File
+from fastapi import APIRouter, Depends, status, UploadFile, File, Form, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert, func, update, delete
-from typing import List
+from typing import List, Optional
 from fastapi_cache.decorator import cache
 from io import BytesIO
+from pydantic import Json
 
 
 import os, sys, asyncio, base64
@@ -43,9 +44,15 @@ async def items(session: AsyncSession = Depends(get_async_session)):
 
 
 @router.post("/new_item")
-async def new_item(request: post_new_item, session: AsyncSession = Depends(get_async_session)):
-    if request.token != await get_token():
-       return await status_error_401("invalid token")
+async def new_item(
+    request: post_new_item = Body(),
+    photo: List[UploadFile] = File(),
+        
+    session: AsyncSession = Depends(get_async_session)):
+    
+    
+    # if request.token != await get_token():
+    #    return await status_error_401("invalid token")
     
 
     await session.execute(insert(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
@@ -57,15 +64,15 @@ async def new_item(request: post_new_item, session: AsyncSession = Depends(get_a
     last_id = await session.execute(func.max(Table_products.id))
     last_id = last_id.scalar()
     
-    for i in range(1, len(request.photos)+1):
+    for i in range(1, len(photo)+1):
         await session.execute(insert(Table_photos).values({Table_photos.product_id: last_id, Table_photos.photo_link:
-            f"https://storage.yandexcloud.net/trade-shop/{last_id}_{i}_main.jpg"}))
+            f"https://storage.yandexcloud.net/trade-shop/{last_id}_{i}_photo.jpg"}))
     
     await session.commit()
     
-    await push_photos(request.photos, last_id)
+    await push_photos(photo, last_id)
     
-    return await status_ok()
+    return await status_ok("ok")
 
 
 

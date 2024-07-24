@@ -1,5 +1,7 @@
-from pydantic import BaseModel
-from fastapi import UploadFile, File
+from pydantic import BaseModel, model_validator
+from fastapi import UploadFile, File, Form
+import json
+
 
 class post_new_item(BaseModel):
     token: str 
@@ -8,7 +10,15 @@ class post_new_item(BaseModel):
     short_description: str
     prise: float 
     contacts: str
-    photos: list[UploadFile] = File(...)
+    
+    
+    @model_validator(mode="before")
+    @classmethod
+    def validate_to_json(cls, value):
+        if isinstance(value, str):
+            return cls(**json.loads(value))
+        return value
+    
     
 class delete_item(BaseModel): 
     token: str 

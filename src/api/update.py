@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, UploadFile, File
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import update, delete, insert, select
@@ -26,28 +26,34 @@ async def v1():
 
 
 @router.put("/shop/item/{id}")
-async def update_item(id: int, request: put_update_item, session: AsyncSession = Depends(get_async_session)):
-    if request.token != await get_token():
-         return await status_error_401("invalid token")
+async def update_item(id: int, 
+                      request: put_update_item,
+                      new_photos: list[UploadFile] = None, 
+                      session: AsyncSession = Depends(get_async_session)):
+    
+    # if request.token != await get_token():
+    #      return await status_error_401("invalid token")
+    
     
     await session.execute(update(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
                                                          Table_products.full_description: request.full_description,
                            Table_products.prise: request.price, Table_products.contacts: request.contacts}).where(Table_products.id == id))
     
-    
     await session.execute(delete(Table_photos).where(Table_photos.product_id == id, Table_photos.photo_link.not_in(request.last_photos)))
     
     
-    if request.new_photos:
-        for i in range(len(request.new_photos)):
-            counter = 1
-
+    if new_photos:
+        counter = 1
+        
+        for i in range(len(new_photos)):
             while True:
-                if f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_main.jpg" in request.last_photos:
+                if f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_photo.jpg" in request.last_photos:
                     counter+=1
+                    print(0)
 
                 else:
-                    await push_photo(request.new_photos[i], id, counter)
+                    await push_photo(new_photos[i], id, counter)
+                    counter+=1
                     break
     
     await session.commit()

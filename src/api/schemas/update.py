@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from fastapi import UploadFile, File
+import json
 
 class put_update_item(BaseModel):
     token: str
@@ -9,4 +10,12 @@ class put_update_item(BaseModel):
     price: float
     contacts: str
     last_photos: list[str]
-    new_photos: list[UploadFile] | None = None
+    
+    @model_validator(mode="before")
+    @classmethod
+    def validate_to_json(cls, value):
+        if isinstance(value, str):
+            return cls(**json.loads(value))
+        return value
+    
+    
