@@ -37,7 +37,7 @@ async def update_item(id: int,
     
     await session.execute(update(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
                                                          Table_products.full_description: request.full_description,
-                           Table_products.prise: request.price, Table_products.contacts: request.contacts}).where(Table_products.id == id))
+                           Table_products.price: request.price, Table_products.contacts: request.contacts}).where(Table_products.id == id))
     
     await session.execute(delete(Table_photos).where(Table_photos.product_id == id, Table_photos.photo_link.not_in(request.last_photos)))
     
