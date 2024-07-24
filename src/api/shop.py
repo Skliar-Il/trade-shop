@@ -38,7 +38,7 @@ async def items(session: AsyncSession = Depends(get_async_session)):
     data = await session.execute(select(Table_products.id, Table_products.name, Table_products.short_description,
                                         Table_products.date_published, Table_products.date_published,Table_products.price,
                                         Table_products.contacts, Table_photos.photo_link)
-                                 .join(Table_photos, Table_photos.product_id == Table_products.id).group_by(Table_products.id))
+                                 .join(Table_photos, Table_photos.product_id == Table_products.id))
     #или писать через .filter(Table_products.id == Table_photos.product_id)
     
     return {"status": "ok", "detail": data.mappings().all()}
