@@ -8,7 +8,7 @@ class post_new_item(BaseModel):
     name: str 
     full_description: str 
     short_description: str
-    prise: float 
+    price: float 
     contacts: str
     
     

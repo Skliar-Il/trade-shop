@@ -18,7 +18,7 @@ class Table_products(Base):
     full_description: Mapped[str]
     short_description: Mapped[str]
     date_published: Mapped[datetime.datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
-    prise: Mapped[float | None]
+    price: Mapped[float | None]
     contacts: Mapped[str]
     # id: Mapped[int] = mapped_column(primary_key = True)
     # tg_id: Mapped[int]
