@@ -13,6 +13,7 @@ from database import get_async_session
 from api.shop import router as router_shop
 from api.update import router as router_update
 from api.login import router as router_login
+from api.blog import router as router_blog
 from config import REDIS_PORT, REDIS_HOST
 
 
@@ -58,5 +59,9 @@ app.include_router(
 
 app.include_router(
     router=router_login
+)
+
+app.include_router(
+    router=router_blog
 )
 

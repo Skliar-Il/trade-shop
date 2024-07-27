@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, UploadFile, File, Form, Body
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, insert, update, delete
+from sqlalchemy import select, insert, update, delete 
 from typing import List, Optional
 from fastapi_cache.decorator import cache
 from sqlalchemy.sql import func
@@ -29,7 +29,7 @@ router = APIRouter(
 
 @router.get("/")
 async def v1():
-    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "not found"})
+    return await status_error_404()
 
 
 @router.get("/list/items")
@@ -70,8 +70,8 @@ async def new_item(
     session: AsyncSession = Depends(get_async_session)):
     
     
-    # if request.token != await get_token():
-    #    return await status_error_401("invalid token")
+    if request.token != await get_token():
+       return await status_error_401("invalid token")
     
 
     await session.execute(insert(Table_products).values({Table_products.name: request.name, Table_products.short_description: request.short_description,
@@ -91,7 +91,7 @@ async def new_item(
     
     await push_photos(photo, last_id)
     
-    return await status_ok("ok")
+    return await status_ok()
 
 
 
@@ -103,7 +103,7 @@ async def delete_item(id: int, request: delete_item, session: AsyncSession = Dep
     await session.execute(delete(Table_products).where(Table_products.id == id))
     await session.commit()
     
-    return await status_ok("ok")
+    return await status_ok()
     
     
     

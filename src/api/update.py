@@ -22,7 +22,7 @@ router = APIRouter(
 
 @router.get("/")
 async def v1():
-    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"detail": "not found"})
+    return await status_error_404()
 
 
 @router.put("/shop/item/{id}")
@@ -60,4 +60,4 @@ async def update_item(id: int,
                     break
     
     await session.commit()
-    return await status_ok("ok")
+    return await status_ok()

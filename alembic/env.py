@@ -17,6 +17,7 @@ sys.path.append(os.path.join(sys.path[0][:-7], "src"))
 from models.admins import *
 from models.products import * 
 from models.photo import *
+from models.blog import *
 from database import Base
 
 from config import POSTGRES_HOST, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER

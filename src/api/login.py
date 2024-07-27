@@ -22,6 +22,11 @@ router = APIRouter(
     tags=["Login"]
 )
 
+@router.get("/")
+async def title():
+    return await status_error_404()
+
+
 
 @router.get("/admin/{login}/{password}")
 async def login_admin(login: str, password: str, session: AsyncSession = Depends(get_async_session)):
