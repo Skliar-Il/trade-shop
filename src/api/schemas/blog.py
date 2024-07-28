@@ -12,3 +12,7 @@ class post_new_item(BaseModel):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    
+    
+class delete_item(BaseModel): 
+    token: str 

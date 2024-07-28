@@ -10,17 +10,19 @@ from database import async_session_factory, get_async_session
 from models.admins import Table_Admins
 from api.responses import *
 
+
+    
+router = APIRouter(
+    prefix="/login",
+    tags=["Login"]
+)
+
 @cache(expire=30)
 async def get_token():
     async with async_session_factory() as session: 
         token = await session.execute(select(Table_Admins.token))
         
         return token.scalar()
-    
-router = APIRouter(
-    prefix="/login",
-    tags=["Login"]
-)
 
 @router.get("/")
 async def title():

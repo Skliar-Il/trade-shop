@@ -80,3 +80,13 @@ async def new_item(request: post_new_item,
     
     
     
+@router.delete("/delete_item")
+async def delete_item(id: int, request: delete_item, session: AsyncSession = Depends(get_async_session)):
+    if request.token != await get_token():
+        return await status_error_401("invalid token")
+    
+    await session.execute(delete(Table_blog).where(Table_blog.id == id))
+    
+    await session.commit()
+    
+    return await status_ok()
