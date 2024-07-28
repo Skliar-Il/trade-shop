@@ -2,6 +2,7 @@ from fastapi import Depends, APIRouter, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, insert, func
 from typing import List
+from fastapi_cache.decorator import cache
 
 import sys, os 
 
@@ -28,6 +29,7 @@ async def title():
     return await status_error_404()
 
 @router.get("/list/items")
+@cache(expire=30)
 async def get_items(session: AsyncSession = Depends(get_async_session)):
     data = await session.execute(select(Table_blog.id, Table_blog.date_published, Table_blog.description, Table_blog.name,
                                         Table_photos.photo_link).filter(Table_photos.blog_id == Table_blog.id))
@@ -36,6 +38,7 @@ async def get_items(session: AsyncSession = Depends(get_async_session)):
 
 
 @router.get("/item/{id}")
+@cache(expire=30)
 async def get_item(id: int, 
                    session: AsyncSession = Depends(get_async_session)):
     
@@ -74,4 +77,6 @@ async def new_item(request: post_new_item,
     await push_photos(photos, last_id)
     
     return await status_ok()
+    
+    
     

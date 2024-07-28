@@ -24,3 +24,9 @@ async def push_photo(photo, id, ident_id):
     
     return 0
 
+@celery.task
+async def push_photo_blog(photo, id, ident_id):
+    s3.put_object(Bucket=BUCKET, Key=f"{id}_{ident_id}_photo_blog.jpg", Body=photo.file)
+    print(photo.filename)
+    return 0 
+

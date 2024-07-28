@@ -45,6 +45,7 @@ async def items(session: AsyncSession = Depends(get_async_session)):
 
 
 @router.get("/item/{id}")
+@cache(expire=30)
 async def get_item(id: int, session: AsyncSession = Depends(get_async_session)):
     data = await session.execute(select(Table_products.id, Table_products.name, Table_products.short_description, 
                                         Table_products.full_description,
