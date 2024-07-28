@@ -42,30 +42,40 @@ async def update_shop_item(id: int,
     
     if request.last_photos:
         await session.execute(delete(Table_photos).where(Table_photos.product_id == id, Table_photos.photo_link.not_in(request.last_photos)))
-    
+
+        if new_photos:
+            counter = 1
+
+            for i in range(len(new_photos)):
+                while True:
+                    origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_photo.jpg"
+
+                    if origin in request.last_photos:
+                        counter+=1
+
+
+                    else:
+                        await push_photo(new_photos[i], id, counter)
+                        await session.execute(insert(Table_photos).values({Table_photos.product_id: id, Table_photos.photo_link: origin}))
+                        counter+=1
+                        break  
+                      
     else:
         await session.execute(delete(Table_photos).where(Table_photos.product_id == id))
-    
-    
-    if new_photos:
-        counter = 1
         
-        for i in range(len(new_photos)):
-            while True:
-                origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{counter}_photo.jpg"
-                
-                if origin in request.last_photos:
-                    counter+=1
-                    
+        for i in range(1, len(new_photos)+1):
+            origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{i}_photo.jpg"
+            await session.execute(insert(Table_photos).values({Table_photos.product_id: id,
+                                                               Table_photos.photo_link: origin}))
+            
+            await push_photo(new_photos[i-1], id, i)
+    
 
-                else:
-                    await push_photo(new_photos[i], id, counter)
-                    await session.execute(insert(Table_photos).values({Table_photos.product_id: id, Table_photos.photo_link: origin}))
-                    counter+=1
-                    break
     
     await session.commit()
     return await status_ok()
+
+
 
 @router.put("/blog/item/{id}")
 async def update_blog_item(id: int, 
