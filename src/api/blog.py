@@ -63,16 +63,16 @@ async def new_item(request: post_new_item,
        return await status_error_401("invalid token")    
     
     await session.execute(insert(Table_blog).values({Table_blog.name: request.name, Table_blog.description: request.description}))
-    await session.flush()
-    
-    last_id = await session.execute(func.max(Table_blog.id))
-    last_id = last_id.scalar()
 
     if photos:
+        await session.flush()
+    
+        last_id = await session.execute(func.max(Table_blog.id))
+        last_id = last_id.scalar()
+        
         for i in range(1, len(photos)+1):
             await session.execute(insert(Table_photos).values({Table_photos.blog_id: last_id, Table_photos.photo_link:
                 f"https://storage.yandexcloud.net/trade-shop/{last_id}_{i}_photo_blog.jpg"}))
-            
         await push_photos(photos, last_id)
     
     await session.commit()
