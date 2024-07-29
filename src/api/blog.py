@@ -56,7 +56,7 @@ async def get_item(id: int,
 
 @router.post("/new_item")
 async def new_item(request: post_new_item, 
-                   photos: List[UploadFile] | None= None, 
+                   photos: List[UploadFile] | None = None, 
                    session: AsyncSession = Depends(get_async_session)):
     
     if request.token != await get_token():
@@ -76,9 +76,6 @@ async def new_item(request: post_new_item,
         await push_photos(photos, last_id)
     
     await session.commit()
-    
-
-    
     return await status_ok()
     
     
