@@ -67,7 +67,7 @@ async def get_item(id: int, session: AsyncSession = Depends(get_async_session)):
 @router.post("/new_item")
 async def new_item(
     request: post_new_item = Body(),
-    photos: List[UploadFile] | None = File(...),   
+    photos: List[UploadFile] = None,   
     session: AsyncSession = Depends(get_async_session)):
     
     
