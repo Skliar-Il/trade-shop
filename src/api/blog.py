@@ -75,6 +75,7 @@ async def new_item(request: post_new_item,
     await session.commit()
     
     if photos:
+        print("lolo")
         await push_photos(photos, last_id)
     
     return await status_ok()
