@@ -63,12 +63,13 @@ async def update_shop_item(id: int,
     else:
         await session.execute(delete(Table_photos).where(Table_photos.product_id == id))
         
-        for i in range(1, len(new_photos)+1):
-            origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{i}_photo.jpg"
-            await session.execute(insert(Table_photos).values({Table_photos.product_id: id,
-                                                               Table_photos.photo_link: origin}))
-            
-            await push_photo(new_photos[i-1], id, i)
+        if new_photos:
+            for i in range(1, len(new_photos)+1):
+                origin = f"https://storage.yandexcloud.net/trade-shop/{id}_{i}_photo.jpg"
+                await session.execute(insert(Table_photos).values({Table_photos.product_id: id,
+                                                                   Table_photos.photo_link: origin}))
+                
+                await push_photo(new_photos[i-1], id, i)
     
 
     

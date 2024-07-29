@@ -17,7 +17,7 @@ router = APIRouter(
     tags=["Login"]
 )
 
-@cache(expire=30)
+@cache(expire=5)
 async def get_token():
     async with async_session_factory() as session: 
         token = await session.execute(select(Table_Admins.token))
