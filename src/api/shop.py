@@ -67,7 +67,7 @@ async def get_item(id: int, session: AsyncSession = Depends(get_async_session)):
 @router.post("/new_item")
 async def new_item(
     request: post_new_item = Body(),
-    photo: List[UploadFile] = None,   
+    photos: List[UploadFile] = None,   
     session: AsyncSession = Depends(get_async_session)):
     
     
@@ -84,13 +84,13 @@ async def new_item(
     last_id = await session.execute(func.max(Table_products.id))
     last_id = last_id.scalar()
     
-    for i in range(1, len(photo)+1):
+    for i in range(1, len(photos)+1):
         await session.execute(insert(Table_photos).values({Table_photos.product_id: last_id, Table_photos.photo_link:
             f"https://storage.yandexcloud.net/trade-shop/{last_id}_{i}_photo.jpg"}))
     
     await session.commit()
     
-    await push_photos(photo, last_id)
+    await push_photos(photos, last_id)
     
     return await status_ok()
 
