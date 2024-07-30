@@ -32,7 +32,7 @@ async def title():
 @cache(expire=30)
 async def get_items(session: AsyncSession = Depends(get_async_session)):
     data = await session.execute(select(Table_blog.id, Table_blog.date_published, Table_blog.description, Table_blog.name,
-                                        Table_photos.photo_link).filter(Table_photos.blog_id == Table_blog.id))
+                                        Table_photos.photo_link).join(Table_photos, Table_blog.id == Table_photos.blog_id, isouter=True))
     
     return {"status": "ok", "detail": data.mappings().all()}
 
@@ -44,9 +44,9 @@ async def get_item(id: int,
     
     data = await session.execute(select(Table_blog.id, Table_blog.date_published, Table_blog.description, Table_blog.name,
                                         Table_photos.photo_link)
-                                 .filter(Table_photos.blog_id == Table_blog.id)
+                                 .join(Table_photos, Table_blog.id == Table_photos.blog_id, isouter=True)
                                  .where(Table_blog.id == id))  
-    
+        
     data = data.mappings().all()
     
     if data == []:
