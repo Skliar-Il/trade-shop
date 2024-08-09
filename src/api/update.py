@@ -88,7 +88,7 @@ async def update_blog_item(id: int,
         return await status_error_401("invalid token")
     
     
-    await session.execute(update(Table_blog).values({Table_blog.name: request.name, Table_blog.description: request.description}))
+    await session.execute(update(Table_blog).values({Table_blog.name: request.name, Table_blog.description: request.description}).where(Table_blog.id == id))
     
     if request.last_photos:
         await session.execute(delete(Table_photos).where(Table_photos.blog_id == id, 
